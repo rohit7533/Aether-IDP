@@ -1,0 +1,51 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: nodejs-aks-service
+  title: Node.js Service with AKS Deployment
+  description: Creates a Node.js service repository with GitHub Actions for AKS deployment.
+  tags:
+    - nodejs
+    - aks
+    - github-actions
+spec:
+  owner: your-email@example.com
+  type: service
+  parameters:
+    - title: Service Information
+      required:
+        - name
+        - owner
+        - description
+      properties:
+        name:
+          title: Service Name
+          type: string
+          description: Unique name for the service.
+        owner:
+          title: Owner
+          type: string
+          description: GitHub username or organization owning the repository.
+        description:
+          title: Description
+          type: string
+          description: Brief description of the service.
+  steps:
+    - id: fetch
+      name: Fetch Skeleton
+      action: fetch:template
+      input:
+        url: ./skeleton
+    - id: publish
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: '${{ parameters.description }}'
+        repoUrl: 'github.com/${{ parameters.owner }}/${{ parameters.name }}'
+        defaultBranch: main
+    - id: register
+      name: Register in Backstage Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
