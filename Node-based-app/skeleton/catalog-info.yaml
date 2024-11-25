@@ -1,11 +1,11 @@
 apiVersion: backstage.io/v1beta1
 kind: Component
 metadata:
-  name: {{parameters.name}}
+  name: '{{ parameters.name }}'
   description: '{{parameters.description}}'
   annotations:
     github.com/project-slug: '{{parameters.owner}}/{{parameters.name}}'
 spec:
   type: service
-  owner: '{{parameters.owner}}'
+  owner: '{{parameters.owner }}'
   lifecycle: production
