@@ -1,13 +1,13 @@
 {
-  "name": "{{parameters.name}}",
+  "name": " ${{values.name}}",
   "version": "1.0.0",
-  "description": "{{parameters.description}}",
+  "description": "${{values.description}}",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "build": "echo 'Build step can be added here if needed.'"
   },
-  "author": "{{parameters.owner}}",
+  "author": "${{values.owner}}",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1"
