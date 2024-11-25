@@ -36,6 +36,10 @@ spec:
       action: fetch:template
       input:
         url: ./skeleton
+      values:
+        name: ${{ parameters.name }}
+        owner: ${{ parameters.owner }}
+        description: ${{ parameters.description }}
     - id: publish
       name: Publish to GitHub
       action: publish:github
