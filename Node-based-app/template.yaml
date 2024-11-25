@@ -9,7 +9,7 @@ metadata:
     - aks
     - github-actions
 spec:
-  owner: your-email@example.com
+  owner: rohitlaheri@outlook.com
   type: service
   parameters:
     - title: Service Information
