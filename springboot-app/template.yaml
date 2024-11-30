@@ -1,0 +1,178 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: springboot-aks-service
+  title: springboot Service with AKS Deployment
+  description: Creates a springboot service repository with Tekton pipeline for AKS deployment.
+  tags:
+    - springboot
+    - aks
+    - tekton
+spec:
+  owner: rohitlaheri@outlook.com
+  type: service
+  parameters:
+    - title: Service Information
+      required:
+        - name
+        - owner
+        - description
+      properties:
+        name:
+          title: Service Name
+          type: string
+          description: Unique name for the service.
+        owner:
+          title: Owner
+          type: string
+          description: GitHub username or organization owning the repository.
+        description:
+          title: Description
+          type: string
+          description: Brief description of the service.
+        pipelineType:
+          title: Pipeline Type
+          type: string
+          enum:
+            - Tekton
+          description: Select the pipeline system to use
+          validation:
+            required: true
+    - title: Deploy Configuration
+        properties:
+          deployType:
+            title: Deploy Type
+            type: string
+            enum:
+              - AKS
+            description: Select the deployment target
+            validation:
+              required: true
+          namespace:
+              title: K8s Namespace
+              type: string
+              description: Provide the namespace to deploy
+              validation:
+                required: true
+          dockerRepo:
+              title: Docker Repository
+              type: string
+              description: Provide the docker repo to push & pull image
+              validation:
+                required: true
+  uiSchema:
+    # pipelineType:
+    #   'ui:widget': radio
+    # buildType:
+    #   'ui:condition': "formData.pipelineType !== ''"
+    # testType:
+    #   'ui:condition': "formData.pipelineType !== ''"
+    deployType:
+      'ui:condition': "formData.pipelineType !== ''"
+  steps:
+    #  - id: fetch-k8s-file
+    #   name: Fetch K8s deployment file
+    #   action: templater:handlebars
+    #   input:
+    #     directory: ./Common-Artifacts/k8s/springboot-deploy.yaml
+    #     values:
+    #       name: ${{ parameters.name }}
+    #       namespace: ${{ parameters.namespace }}
+    #       dockerRepo: ${{ parameters.dockerRepo }}
+    - id: fetch
+      name: Fetch Skeleton
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          name: ${{ parameters.name }}
+          owner: ${{ parameters.owner }}
+          namespace: ${{ parameters.namespace }}
+          description: ${{ parameters.description }}
+    - id: copy-k8s-resources
+      name: Copy k8s Resources into Skeleton
+      action: scaffolder:copyFiles
+      input:
+        sourcePath: ../Common-Artifacts/k8s/   # Path relative to the template root
+        targetPath: ./skeleton/Tekton/k8s
+    - id: copy-pipeline-resources
+      name: Copy pipeline Resources into Skeleton
+      action: scaffolder:copyFiles
+      input:
+        sourcePath: ./Common-Artifacts/Pipeline/Tekton/   # Path relative to the template root
+        targetPath: ./skeleton/Tekton/
+    - id: template-copied-files
+      name: Template Copied Files with Values
+      action: templater:handlebars
+      input:
+        directory: ./skeleton/Tekton/                  # Path to the skeleton folder after copying
+        values:
+          name: ${{ parameters.name }}
+          namespace: ${{ parameters.namespace }}
+          dockerRepo: ${{ parameters.dockerRepo }}
+          owner: ${{ parameters.owner }}
+          #pipelineType: ${{ parameters.pipelineType }}
+          #buildType: ${{ parameters.buildType }}
+          #testType: ${{ parameters.testType }}
+          #deployType: ${{ parameters.deployType }}
+      # Add any additional derived or static values here
+    # - id: fetch-pipeline-config
+    #   name: Template Additional Files
+    #   action: templater:handlebars
+    #   input:
+    #     directory: ./Common-Artifacts/Pipeline/Tekton/pipeline-run.yaml
+    #     values:
+    #       # Pass any required parameters
+    # - id: template-additional-files
+    #   name: Template Additional Files
+    #   action: templater:handlebars
+    #   input:
+    #     directory: ./Common-Artifacts/Pipeline/Tekton/pipeline.yaml
+    #     values:
+    #       # Pass any required parameters
+    # - id: template-additional-files
+    #   name: Template Additional Files
+    #   action: templater:handlebars
+    #   input:
+    #     directory: ./Common-Artifacts/Pipeline/Tekton/tasks.yaml
+    #     values:
+    #       # Pass any required parameters
+    # - id: merge-files
+    #   name: Merge Files into Skeleton
+    #   action: scaffolder:mergeFiles
+    #   input:
+    #     sources:
+    #       - ./Common-Artifacts/Pipeline/Tekton
+    #     targetPath: ./skeleton/Tekton/
+    # - id: merge-files
+    #   name: Merge Files into Skeleton
+    #   action: scaffolder:mergeFiles
+    #   input:
+    #     sources:
+    #       - ./Common-Artifacts/k8s/
+    #     targetPath: ./skeleton/Tekton/k8s/
+    - id: publish
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: '${{ parameters.description }}'
+        #repoUrl: 'github.com/${{ parameters.owner }}/${{ parameters.name }}'
+        repoUrl: 'github.com?owner=${{ parameters.owner }}&repo=${{ parameters.name }}'
+        access: 'private'
+        #repoUrl: '${{ parameters.owner }}/${{ parameters.name }}'
+        defaultBranch: main
+    - id: register
+      name: Register in Backstage Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}
