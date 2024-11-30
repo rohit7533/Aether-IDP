@@ -179,19 +179,19 @@ spec:
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yaml'
-    - id: deploy-k8s
-      name: Deploy to Kubernetes
-      action: kubernetes:kubectl
-      input:
-        manifests:
-          $eval: |
-            const fs = require('fs');
-            const path = require('path');
-            const yamlDir = path.resolve(ctx.workspacePath, ctx.parameters.yamlFilesPath);
-            const yamlFiles = fs.readdirSync(yamlDir).map(file => fs.readFileSync(path.join(yamlDir, file), 'utf8'));
-            yamlFiles;
-        kubeconfig: ${{ parameters.kubeconfig }}
-        namespace: ${{ parameters.namespace }}
+    # - id: deploy-k8s
+    #   name: Deploy to Kubernetes
+    #   action: kubernetes:kubectl
+    #   input:
+    #     manifests:
+    #       $eval: |
+    #         const fs = require('fs');
+    #         const path = require('path');
+    #         const yamlDir = path.resolve(ctx.workspacePath, ctx.parameters.yamlFilesPath);
+    #         const yamlFiles = fs.readdirSync(yamlDir).map(file => fs.readFileSync(path.join(yamlDir, file), 'utf8'));
+    #         yamlFiles;
+    #     kubeconfig: ${{ parameters.kubeconfig }}
+    #     namespace: ${{ parameters.namespace }}
   # Outputs are displayed to the user after a successful execution of the template.
   output:
     links:
