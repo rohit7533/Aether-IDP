@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: ${{values.name}}
   namespace: ${{values.namespace}}
+  labels:
+    tekton.dev/pipelines: ${{values.namespace}}/springboot-pipeline
 spec:
   replicas: 1
   selector:

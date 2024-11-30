@@ -2,6 +2,9 @@ apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: git-clone
+  namespace: ${{values.namespace}}
+  labels:
+    tekton.dev/pipelines: ${{values.namespace}}/springboot-pipeline
 spec:
   steps:
     - name: clone-repo
@@ -16,57 +19,66 @@ spec:
     - name: source
 
 ---
-# apiVersion: tekton.dev/v1beta1
-# kind: Task
-# metadata:
-#   name: build-app
-# spec:
-#   steps:
-#     - name: build
-#       image: maven:3.8.5-openjdk-11
-#       workingDir: /workspace/source
-#       script: |
-#         #!/bin/sh
-#         mvn clean package
-#   workspaces:
-#     - name: source
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-app
+  namespace: ${{values.namespace}}
+spec:
+  steps:
+    - name: build
+      image: maven:3.8.5-openjdk-17
+      workingDir: /workspace/source
+      script: |
+        #!/bin/sh
+        mvn clean package
+  workspaces:
+    - name: source
 
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: docker-build-and-push
+  namespace: ${{values.namespace}}
+  labels:
+    tekton.dev/pipelines: ${{values.namespace}}/springboot-pipeline
 spec:
   steps:
-    - name: docker-build
-      image: docker:20.10.8
+    - name: buildah-build
+      image: quay.io/buildah/stable:latest
       script: |
         #!/bin/sh
-        docker build -t $(params.image) .
-        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-        docker push $(params.image)
+        ls /workspace/source -latr
+        echo "checking for registry-auth..."
+        
+        cp /workspace/source/registry-auth/.dockerconfigjson /tmp/auth.json
+        ls /tmp/ -latr
+        buildah bud --file /workspace/source/dockerfile -t $(params.image) 
+        buildah push --authfile /tmp/auth.json $(params.image)
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: registry-auth-volume
+          mountPath: /workspace/source/registry-auth
   params:
     - name: image
       type: string
   workspaces:
     - name: source
-  env:
-    - name: DOCKER_USERNAME
-      valueFrom:
-        secretKeyRef:
-          name: docker-registry
-          key: docker-username
-    - name: DOCKER_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: docker-registry
-          key: docker-password
+  volumes:
+    - name: registry-auth-volume
+      secret:
+        secretName: registry-auth
 
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: deploy-to-aks
+  namespace: ${{values.namespace}}
+  labels:
+    tekton.dev/pipelines: ${{values.namespace}}/springboot-pipeline
 spec:
   steps:
     - name: kubectl-apply
@@ -89,3 +101,5 @@ spec:
     #   type: string
     # - name: image
     #   type: string
+  workspaces:
+    - name: source
