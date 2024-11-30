@@ -39,27 +39,27 @@ spec:
           validation:
             required: true
     - title: Deploy Configuration
-        properties:
-          deployType:
-            title: Deploy Type
+      properties:
+        deployType:
+          title: Deploy Type
+          type: string
+          enum:
+            - AKS
+          description: Select the deployment target
+          validation:
+            required: true
+        namespace:
+            title: K8s Namespace
             type: string
-            enum:
-              - AKS
-            description: Select the deployment target
+            description: Provide the namespace to deploy
             validation:
               required: true
-          namespace:
-              title: K8s Namespace
-              type: string
-              description: Provide the namespace to deploy
-              validation:
-                required: true
-          dockerRepo:
-              title: Docker Repository
-              type: string
-              description: Provide the docker repo to push & pull image
-              validation:
-                required: true
+        dockerRepo:
+            title: Docker Repository
+            type: string
+            description: Provide the docker repo to push & pull image
+            validation:
+              required: true
   uiSchema:
     # pipelineType:
     #   'ui:widget': radio
