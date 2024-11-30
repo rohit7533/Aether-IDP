@@ -91,16 +91,16 @@ spec:
           description: ${{ parameters.description }}
     - id: copy-k8s-resources
       name: Copy k8s Resources into Skeleton
-      action: scaffolder:copyFiles
+      action: filesystem:copy
       input:
-        sourcePath: ../Common-Artifacts/k8s/   # Path relative to the template root
-        targetPath: ./skeleton/Tekton/k8s
+        source: ./Common-Artifacts/k8s/   # Path relative to the template root
+        destination: ./skeleton/Tekton/k8s
     - id: copy-pipeline-resources
       name: Copy pipeline Resources into Skeleton
-      action: scaffolder:copyFiles
+      action: filesystem:copy
       input:
-        sourcePath: ./Common-Artifacts/Pipeline/Tekton/   # Path relative to the template root
-        targetPath: ./skeleton/Tekton/
+        source: ./Common-Artifacts/Pipeline/Tekton/   # Path relative to the template root
+        destination: ./skeleton/Tekton/
     - id: template-copied-files
       name: Template Copied Files with Values
       action: templater:handlebars
