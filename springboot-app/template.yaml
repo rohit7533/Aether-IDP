@@ -88,30 +88,31 @@ spec:
           name: ${{ parameters.name }}
           owner: ${{ parameters.owner }}
           namespace: ${{ parameters.namespace }}
+          dockerRepo: ${{ parameters.dockerRepo }}
           description: ${{ parameters.description }}
-    - id: copy-k8s-resources
-      name: Copy k8s Resources into Skeleton
-      action: fetch:template
-      input:
-        url: ./Common-Artifacts/k8s/   # Path relative to the template root
-        targetPath: ./skeleton/Tekton/k8s
-        values:
-          name: ${{ parameters.name }}
-          namespace: ${{ parameters.namespace }}
-          dockerRepo: ${{ parameters.dockerRepo }}
-          owner: ${{ parameters.owner }}
-    - id: copy-pipeline-resources
-      name: Copy pipeline Resources into Skeleton
-      action: fetch:template
-      input:
-        url: ./Common-Artifacts/Pipeline/Tekton/   # Path relative to the template root
-        targetPath: ./skeleton/Tekton/
-        values:
-          name: ${{ parameters.name }}
-          namespace: ${{ parameters.namespace }}
-          dockerRepo: ${{ parameters.dockerRepo }}
-          owner: ${{ parameters.owner }}
-    # - id: template-copied-files
+    # - id: copy-k8s-resources
+    #   name: Copy k8s Resources into Skeleton
+    #   action: fetch:template
+    #   input:
+    #     url: ./Common-Artifacts/k8s/   # Path relative to the template root
+    #     targetPath: ./skeleton/Tekton/k8s
+    #     values:
+    #       name: ${{ parameters.name }}
+    #       namespace: ${{ parameters.namespace }}
+    #       dockerRepo: ${{ parameters.dockerRepo }}
+    #       owner: ${{ parameters.owner }}
+    # - id: copy-pipeline-resources
+    #   name: Copy pipeline Resources into Skeleton
+    #   action: fetch:template
+    #   input:
+    #     url: ./Common-Artifacts/Pipeline/Tekton/   # Path relative to the template root
+    #     targetPath: ./skeleton/Tekton/
+    #     values:
+    #       name: ${{ parameters.name }}
+    #       namespace: ${{ parameters.namespace }}
+    #       dockerRepo: ${{ parameters.dockerRepo }}
+    #       owner: ${{ parameters.owner }}
+    # # - id: template-copied-files
     #   name: Template Copied Files with Values
     #   action: templater:handlebars
     #   input:
