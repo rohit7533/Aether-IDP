@@ -57,9 +57,9 @@ spec:
       input:
         url: >
           {{#if (eq parameters.appType "Web App")}}
-            ./web-app/web-app-template.yaml
+            ./web-app/template.yaml
           {{else}}
-            ./web-app/microservice-template.yaml
+            ./microservice/template.yaml
           {{/if}}
         values:
           repoName: ${{ parameters.repoName }}
