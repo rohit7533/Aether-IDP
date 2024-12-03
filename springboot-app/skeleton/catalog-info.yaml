@@ -8,6 +8,10 @@ metadata:
     backstage.io/managed-by-origin-location: url:https://github.com/${{values.owner}}/${{values.name}}
     tekton.dev/pipelines: ${{values.namespace}}/springboot-pipeline # Namespace/PipelineName
     backstage.io/kubernetes-id: ${{ values.name | dump }}
+    backstage.io/kubernetes-cluster: 'docker-desktop'
+    backstage.io/kubernetes-namespace: 'default'
+    tektonci/enabled: 'true'
+    tektonci/namespace: 'deafult'
 spec:
   type: service
   owner: ${{values.owner | dump}}
