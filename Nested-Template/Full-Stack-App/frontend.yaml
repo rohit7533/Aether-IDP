@@ -1,0 +1,37 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: frontend-template
+  title: Frontend Application
+  description: Scaffold a frontend application
+  tags:
+    - frontend
+spec:
+  owner: your-team@example.com
+  parameters:
+    - title: Frontend Configuration
+      required:
+        - framework
+      properties:
+        framework:
+          type: string
+          enum:
+            - React
+            - Vue
+            - Angular
+          description: Frontend framework to use
+  steps:
+    - id: create-repo
+      name: Create GitHub Repository
+      action: your-org/create-github-repo
+      input:
+        name: ${{ parameters.projectName }}-frontend
+        description: Frontend repository for ${{ parameters.projectName }}
+    - id: scaffold-code
+      name: Scaffold Frontend Code
+      action: your-org/scaffold-code
+      input:
+        repoUrl: ${{ steps.create-repo.outputs.repoUrl }}
+        framework: ${{ parameters.framework }}
+  output:
+    repoUrl: ${{ steps.create-repo.outputs.repoUrl }}

@@ -1,0 +1,48 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: full-stack-template
+  title: Full-Stack Application
+  description: Scaffold a full-stack application with optional frontend and backend components
+  tags:
+    - fullstack
+    - frontend
+    - backend
+spec:
+  owner: your-team@example.com
+  parameters:
+    - title: Project Information
+      required:
+        - projectName
+      properties:
+        projectName:
+          type: string
+          description: Name of the project
+        includeFrontend:
+          type: boolean
+          description: Include a frontend application
+          default: true
+        includeBackend:
+          type: boolean
+          description: Include a backend service
+          default: true
+  steps:
+    - if: ${{ parameters.includeFrontend }}
+      id: frontend
+      name: Scaffold Frontend
+      action: scaffolder:template
+      input:
+        templateRef: frontend-template
+        values:
+          projectName: ${{ parameters.projectName }}
+    - if: ${{ parameters.includeBackend }}
+      id: backend
+      name: Scaffold Backend
+      action: scaffolder:template
+      input:
+        templateRef: backend-template
+        values:
+          projectName: ${{ parameters.projectName }}
+  output:
+    frontendRepoUrl: ${{ steps.frontend.outputs.repoUrl }}
+    backendRepoUrl: ${{ steps.backend.outputs.repoUrl }}

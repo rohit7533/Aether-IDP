@@ -1,0 +1,42 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: web-app-template
+  title: Web Application Template
+  description: Scaffold a standard web application
+spec:
+  owner: your-team@example.com
+  parameters:
+    - title: Web Application Configuration
+      required:
+        - framework
+      properties:
+        framework:
+          type: string
+          title: Framework
+          description: Select the web framework
+          enum:
+            - React
+            - Angular
+            - Vue
+  steps:
+    - id: fetch-template
+      name: Fetch Template Files
+      action: fetch:template
+      input:
+        url: ./files/
+        targetPath: ./output
+    - id: apply-template
+      name: Apply Template
+      action: templater:handlebars
+      input:
+        files:
+          - ./output/**
+        values:
+          framework: ${{ parameters.framework }}
+    - id: publish-repo
+      name: Publish to Git Repository
+      action: publish:github
+      input:
+        repoUrl: ${{ outputs.repoUrl }}
+        sourcePath: ./output

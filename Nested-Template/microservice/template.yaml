@@ -1,0 +1,42 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: microservice-template
+  title: Microservice Template
+  description: Scaffold a standard microservice
+spec:
+  owner: your-team@example.com
+  parameters:
+    - title: Microservice Configuration
+      required:
+        - language
+      properties:
+        language:
+          type: string
+          title: Programming Language
+          description: Select the programming language
+          enum:
+            - Java
+            - Node.js
+            - Go
+  steps:
+    - id: fetch-template
+      name: Fetch Template Files
+      action: fetch:template
+      input:
+        url: ./files/
+        targetPath: ./output
+    - id: apply-template
+      name: Apply Template
+      action: templater:handlebars
+      input:
+        files:
+          - ./output/**
+        values:
+          language: ${{ parameters.language }}
+    - id: publish-repo
+      name: Publish to Git Repository
+      action: publish:github
+      input:
+        repoUrl: ${{ outputs.repoUrl }}
+        sourcePath: ./output

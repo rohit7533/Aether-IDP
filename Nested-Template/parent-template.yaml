@@ -1,0 +1,49 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: parent-template
+  title: Parent Template for Application Scaffolding
+  description: Scaffold either a Web Application or a Microservice based on user selection
+spec:
+  owner: your-team@example.com
+  parameters:
+    - title: Application Configuration
+      required:
+        - appType
+      properties:
+        appType:
+          type: string
+          title: Application Type
+          description: Select the type of application to scaffold
+          enum:
+            - Web Application
+            - Microservice
+  steps:
+    - id: create-repo
+      name: Create GitHub Repository
+      action: publish:github/createRepo
+      input:
+        repoName: ${{ parameters.appType | replace(' ', '-') | lower }}
+        private: false
+    - id: call-nested-template
+      name: Call Nested Template
+      action: templater:run
+      input:
+        templateUrl: >
+          {{ if eq parameters.appType "Web Application" }}
+            ./Nested-Template/web-app/template.yaml
+          {{ else if eq parameters.appType "Microservice" }}
+            ./Nested-Template/microservice/template.yaml
+          {{ end }}
+        values:
+          repoUrl: ${{ steps.create-repo.outputs.repoUrl }}
+    - id: push-code
+      name: Push Initial Code
+      action: publish:github/push
+      input:
+        repoUrl: ${{ steps.create-repo.outputs.repoUrl }}
+        branch: main
+        sourcePath: ./initial-code
+  output:
+    repoUrl: ${{ steps.create-repo.outputs.repoUrl }}
+    cloneUrl: ${{ steps.create-repo.outputs.cloneUrl }}

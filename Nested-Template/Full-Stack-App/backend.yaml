@@ -1,0 +1,37 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: backend-template
+  title: Backend Service
+  description: Scaffold a backend service
+  tags:
+    - backend
+spec:
+  owner: your-team@example.com
+  parameters:
+    - title: Backend Configuration
+      required:
+        - language
+      properties:
+        language:
+          type: string
+          enum:
+            - Java
+            - Node.js
+            - Python
+          description: Backend language to use
+  steps:
+    - id: create-repo
+      name: Create GitHub Repository
+      action: your-org/create-github-repo
+      input:
+        name: ${{ parameters.projectName }}-backend
+        description: Backend repository for ${{ parameters.projectName }}
+    - id: scaffold-code
+      name: Scaffold Backend Code
+      action: your-org/scaffold-code
+      input:
+        repoUrl: ${{ steps.create-repo.outputs.repoUrl }}
+        language: ${{ parameters.language }}
+  output:
+    repoUrl: ${{ steps.create-repo.outputs.repoUrl }}
