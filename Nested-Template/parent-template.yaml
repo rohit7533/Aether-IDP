@@ -57,9 +57,9 @@ spec:
       input:
         url: >
           {{#if (eq parameters.appType "Web App")}}
-            ./Nested-Template/web-app-template.yaml
+            ./web-app/web-app-template.yaml
           {{else}}
-            ./Nested-Template/microservice-template.yaml
+            ./web-app/microservice-template.yaml
           {{/if}}
         values:
           repoName: ${{ parameters.repoName }}

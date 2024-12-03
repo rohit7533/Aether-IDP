@@ -29,7 +29,7 @@ spec:
       action: templater:handlebars
       input:
         files:
-          - .skeleton/**
+          - ./skeleton/**
         values:
           appName: "WebApp"
     - id: output-repo-info
