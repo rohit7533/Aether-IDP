@@ -55,12 +55,7 @@ spec:
       name: Select and Run Nested Template
       action: fetch:template
       input:
-        url: >
-          {{#if (eq parameters.appType "Web App")}}
-            ./web-app/template.yaml
-          {{else}}
-            ./microservice/template.yaml
-          {{/if}}
+        url: ./web-app/template.yaml
         values:
           repoName: ${{ parameters.repoName }}
           repoVisibility: ${{ parameters.repoVisibility }}
