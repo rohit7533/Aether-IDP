@@ -53,7 +53,7 @@ spec:
     #       repoUrl: ${{ steps.create-repo.outputs.repoUrl }}
     - id: select-template
       name: Select and Run Nested Template
-      action: scaffolder:fetch
+      action: fetch:template
       input:
         url: >
           {{#if (eq parameters.appType "Web App")}}
