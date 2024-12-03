@@ -69,7 +69,7 @@ spec:
       action: publish:github
       input:
         allowedHosts: ['github.com']
-        repoUrl: 'github.com?owner=rohit7533&repo=${{ parameters.name }}'
+        repoUrl: 'github.com?owner=rohit7533&repo=${{ parameters.repoName }}'
         #access: 'private'
         #repoUrl: '${{ parameters.owner }}/${{ parameters.name }}'
         defaultBranch: main
