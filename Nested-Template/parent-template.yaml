@@ -64,13 +64,24 @@ spec:
         values:
           repoName: ${{ parameters.repoName }}
           repoVisibility: ${{ parameters.repoVisibility }}
-    - id: publish-to-github
+    - id: publish
       name: Publish to GitHub
       action: publish:github
       input:
-        repoUrl: https://github.com/rohit753/${{ parameters.repoName }}
-        branch: main
+        allowedHosts: ['github.com']
+        repoUrl: 'github.com?owner=rohit7533&repo=${{ parameters.name }}'
+        #access: 'private'
+        #repoUrl: '${{ parameters.owner }}/${{ parameters.name }}'
+        defaultBranch: main
         sourcePath: ./output
+    # - id: publish-to-github
+    #   name: Publish to GitHub
+    #   action: publish:github
+    #   input:
+    #     allowedHosts: ['github.com']
+    #     repoUrl: https://github.com/rohit753/${{ parameters.repoName }}
+    #     branch: main
+    #     sourcePath: ./output
   output:
     repoUrl: ${{ steps.create-repo.outputs.repoUrl }}
     cloneUrl: ${{ steps.create-repo.outputs.cloneUrl }}
