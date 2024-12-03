@@ -36,6 +36,6 @@ spec:
       name: Output Repository Info
       action: scaffolder:output
       input:
-        repoUrl: https://github.com/example/${{ parameters.repoName }}
+        repoUrl: https://github.com/rohit753/${{ parameters.repoName }}
   output:
     repoUrl: ${{ steps.output-repo-info.outputs.repoUrl }}
