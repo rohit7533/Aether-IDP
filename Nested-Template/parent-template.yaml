@@ -68,7 +68,7 @@ spec:
       name: Publish to GitHub
       action: publish:github
       input:
-        repoUrl: ${{ steps.select-template.outputs.repoUrl }}
+        repoUrl: https://github.com/rohit753/${{ parameters.repoName }}
         branch: main
         sourcePath: ./output
   output:
