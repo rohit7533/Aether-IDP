@@ -5,20 +5,33 @@ metadata:
   title: Parent Template for Application Scaffolding
   description: Scaffold either a Web Application or a Microservice based on user selection
 spec:
-  owner: your-team@example.com
   type: service
+  owner: your-team@example.com
   parameters:
     - title: Application Configuration
       required:
         - appType
+        - repoName
+        - repoVisibility
       properties:
         appType:
           type: string
           title: Application Type
-          description: Select the type of application to scaffold
+          description: Choose the type of application to scaffold
           enum:
-            - Web Application
+            - Web App
             - Microservice
+        repoName:
+          type: string
+          title: GitHub Repository Name
+          description: Name of the GitHub repository
+        repoVisibility:
+          type: string
+          title: Repository Visibility
+          description: Choose the visibility of the repository
+          enum:
+            - public
+            - private
   steps:
     - id: create-repo
       name: Create GitHub Repository
@@ -26,25 +39,38 @@ spec:
       input:
         repoName: ${{ parameters.appType | replace(' ', '-') | lower }}
         private: false
-    - id: call-nested-template
-      name: Call Nested Template
-      action: templater:run
+    # - id: call-nested-template
+    #   name: Call Nested Template
+    #   action: templater:run
+    #   input:
+    #     templateUrl: >
+    #       {{ if eq parameters.appType "Web Application" }}
+    #         ./Nested-Template/web-app/template.yaml
+    #       {{ else if eq parameters.appType "Microservice" }}
+    #         ./Nested-Template/microservice/template.yaml
+    #       {{ end }}
+    #     values:
+    #       repoUrl: ${{ steps.create-repo.outputs.repoUrl }}
+    - id: select-template
+      name: Select and Run Nested Template
+      action: scaffolder:fetch
       input:
-        templateUrl: >
-          {{ if eq parameters.appType "Web Application" }}
-            ./Nested-Template/web-app/template.yaml
-          {{ else if eq parameters.appType "Microservice" }}
-            ./Nested-Template/microservice/template.yaml
-          {{ end }}
+        url: >
+          {{#if (eq parameters.appType "Web App")}}
+            ./Nested-Template/web-app-template.yaml
+          {{else}}
+            ./Nested-Template/microservice-template.yaml
+          {{/if}}
         values:
-          repoUrl: ${{ steps.create-repo.outputs.repoUrl }}
-    - id: push-code
-      name: Push Initial Code
-      action: publish:github/push
+          repoName: ${{ parameters.repoName }}
+          repoVisibility: ${{ parameters.repoVisibility }}
+    - id: publish-to-github
+      name: Publish to GitHub
+      action: publish:github
       input:
-        repoUrl: ${{ steps.create-repo.outputs.repoUrl }}
+        repoUrl: ${{ steps.select-template.outputs.repoUrl }}
         branch: main
-        sourcePath: ./initial-code
+        sourcePath: ./output
   output:
     repoUrl: ${{ steps.create-repo.outputs.repoUrl }}
     cloneUrl: ${{ steps.create-repo.outputs.cloneUrl }}

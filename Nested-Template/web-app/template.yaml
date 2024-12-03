@@ -3,41 +3,39 @@ kind: Template
 metadata:
   name: web-app-template
   title: Web Application Template
-  description: Scaffold a standard web application
+  description: Scaffolds a web application
+  tags:
+    - web
 spec:
   owner: your-team@example.com
-  type: service
   parameters:
-    - title: Web Application Configuration
+    - title: Repository Configuration
       required:
-        - framework
+        - repoName
+        - repoVisibility
       properties:
-        framework:
+        repoName:
           type: string
-          title: Framework
-          description: Select the web framework
+          description: The name of the GitHub repository
+        repoVisibility:
+          type: string
+          description: The visibility of the repository
           enum:
-            - React
-            - Angular
-            - Vue
+            - public
+            - private
   steps:
-    - id: fetch-template
-      name: Fetch Template Files
-      action: fetch:template
-      input:
-        url: ./files/
-        targetPath: ./output
-    - id: apply-template
-      name: Apply Template
+    - id: generate-web-app
+      name: Generate Web Application
       action: templater:handlebars
       input:
         files:
-          - ./output/**
+          - .skeleton/**
         values:
-          framework: ${{ parameters.framework }}
-    - id: publish-repo
-      name: Publish to Git Repository
-      action: publish:github
+          appName: "WebApp"
+    - id: output-repo-info
+      name: Output Repository Info
+      action: scaffolder:output
       input:
-        repoUrl: ${{ outputs.repoUrl }}
-        sourcePath: ./output
+        repoUrl: https://github.com/example/${{ parameters.repoName }}
+  output:
+    repoUrl: ${{ steps.output-repo-info.outputs.repoUrl }}
