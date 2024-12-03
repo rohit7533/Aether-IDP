@@ -53,7 +53,7 @@ spec:
     #       repoUrl: ${{ steps.create-repo.outputs.repoUrl }}
     - id: select-template
       name: Select and Run Nested Template
-      action: fetch:template
+      action: templater:run
       input:
         url: ./web-app/template.yaml
         values:
