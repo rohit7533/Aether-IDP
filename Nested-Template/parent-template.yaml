@@ -33,12 +33,12 @@ spec:
             - public
             - private
   steps:
-    - id: create-repo
-      name: Create GitHub Repository
-      action: publish:github/createRepo
-      input:
-        repoName: ${{ parameters.appType | replace(' ', '-') | lower }}
-        private: false
+    # - id: create-repo
+    #   name: Create GitHub Repository
+    #   action: publish:github/createRepo
+    #   input:
+    #     repoName: ${{ parameters.appType | replace(' ', '-') | lower }}
+    #     private: false
     # - id: call-nested-template
     #   name: Call Nested Template
     #   action: templater:run
