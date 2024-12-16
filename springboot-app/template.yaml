@@ -239,7 +239,8 @@ spec:
       name: Register Application in Backstage Catalog
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        #repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        repoUrl: 'https://github.com/${{ parameters.owner }}/${{ parameters.name }}'
         catalogInfoPath: '/catalog-info.yaml'
     - id: fetch-infra
       name: Fetch Terraform
@@ -258,7 +259,8 @@ spec:
       # depends-on:
       #   - fetch-infra
       input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        #repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        repoUrl: 'https://github.com/${{ parameters.owner }}/terraform-aks'
         catalogInfoPath: '/catalog-info.yaml'
     - id: github-action
       name: Trigger GitHub Action
