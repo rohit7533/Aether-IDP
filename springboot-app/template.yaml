@@ -232,7 +232,7 @@ spec:
         description: '${{ parameters.description }}'
         #repoUrl: 'github.com/${{ parameters.owner }}/${{ parameters.name }}'
         repoUrl: 'github.com?owner=${{ parameters.owner }}&repo=${{ parameters.name }}'
-        access: 'public'
+        access: public
         #repoUrl: '${{ parameters.owner }}/${{ parameters.name }}'
         defaultBranch: main
     - id: register
