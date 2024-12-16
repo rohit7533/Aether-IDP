@@ -12,6 +12,65 @@ spec:
   owner: rohitlaheri@outlook.com
   type: service
   parameters:
+    - title: Basic Terraform Organizations Configuration
+      required:
+        - organizationName
+        - email
+        - projectName
+        - workspaceName
+      properties:
+        organizationName:
+          title: Organization Name
+          type: string
+          description: The name of your Organization. Terraform organizations let you manage organizations, projects, and teams.
+          ui:autofocus: true
+          enum:
+            - kedar-org
+        email:
+          title: Email
+          type: string
+          description: Email of user/owner
+        projectName:
+          title: Project Name
+          type: string
+          description: The name of your Project. Terraform projects let you manage resources and permissions.  
+        workspaceName:
+          title: Workspace Name
+          type: string
+          description: The name of your workspace. Terraform workspaces let you manage environment-specific configurations.
+          enum:
+            - NodeJSAks
+    - title: Basic Azure Kubernetes Service(AKS) Cluster Configuration
+      required:
+        - resourceGroupName
+        - clusterName
+        - region
+        - action
+      properties:
+        resourceGroupName:
+          title: Resource Group Name
+          type: string
+          description: The name of your Azure Resource Group  
+          ui:autofocus: true
+        clusterName:
+          title: Cluster Name
+          type: string
+          description: The name of your AKS cluster
+        region:
+          title: Azure Region
+          type: string
+          description: The Azure region where the cluster will be deployed
+          enum:
+            - eastus
+            - westeurope
+            - southeastasia
+        action:
+          title: Action
+          type: string
+          description: Action to perform (apply/destroy)
+          enum:
+            - apply
+            - destroy
     - title: Service Information
       required:
         - name
@@ -173,6 +232,22 @@ spec:
         access: 'private'
         #repoUrl: '${{ parameters.owner }}/${{ parameters.name }}'
         defaultBranch: main
+    - id: github-action
+      name: Trigger GitHub Action
+      action: github:actions:dispatch
+      input:
+        workflowId: manage-aks-cluster.yml  # GitHub Action workflow ID
+        repoUrl: 'github.com?repo=terraform-aks&owner=rohit7533'
+        branchOrTagName: 'main'  # The branch to run this action on
+        workflowInputs:
+          organizationName: ${{ parameters.organizationName }}
+          email: ${{ parameters.email }}
+          projectName: ${{ parameters.projectName }}
+          workspaceName: ${{ parameters.workspaceName }}
+          resourceGroupName: ${{ parameters.resourceGroupName }}  
+          clusterName: ${{ parameters.clusterName }}
+          region: ${{ parameters.region }}
+          action: ${{ parameters.action }}
     - id: register
       name: Register in Backstage Catalog
       action: catalog:register
