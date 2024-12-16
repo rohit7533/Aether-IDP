@@ -269,7 +269,7 @@ spec:
         - register-infra
       input:
         workflowId: manage-aks-cluster.yml  # GitHub Action workflow ID
-        repoUrl: 'github.com?repo=terraform-aks&owner=kedarbhandare'
+        repoUrl: 'github.com?repo=terraform-aks&owner=rohit7533'
         branchOrTagName: 'main'  # The branch to run this action on
         workflowInputs:
           organizationName: ${{ parameters.organizationName }}

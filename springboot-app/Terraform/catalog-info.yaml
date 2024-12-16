@@ -3,7 +3,7 @@ kind: Component
 metadata:
   name: ${{ values.name | dump }} #dev-aks-cluster
   annotations:
-    github.com/project-slug: kedarbhandare/terraform-aks
+    github.com/project-slug: rohit7533/terraform-aks
     terraform/workspaces: ${{values.workspaceName}} #NodeJSAks
     terraform/organization: ${{values.org}} #kedar-org
   description: Azure Kubernetes Service(AKS) cluster managed by Terraform
