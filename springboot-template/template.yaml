@@ -232,7 +232,6 @@ spec:
         description: '${{ parameters.description }}'
         #repoUrl: 'github.com/${{ parameters.owner }}/${{ parameters.name }}'
         repoUrl: 'github.com?owner=${{ parameters.owner }}&repo=${{ parameters.name }}'
-        access: public
         #repoUrl: '${{ parameters.owner }}/${{ parameters.name }}'
         defaultBranch: main
     - id: register
@@ -240,8 +239,8 @@ spec:
       action: catalog:register
       input:
         #repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        repoUrl: 'https://github.com/${{ parameters.owner }}/${{ parameters.name }}'
-        catalogInfoPath: 'catalog-info.yaml'
+        repoUrl: 'https://github.com/${{ parameters.owner }}/${{ parameters.name }}/blob/main/catalog-info.yaml'
+       # catalogInfoPath: 'catalog-info.yaml'
     - id: fetch-infra
       name: Fetch Terraform
       action: fetch:template
@@ -260,8 +259,8 @@ spec:
       #   - fetch-infra
       input:
         #repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        repoUrl: 'https://github.com/${{ parameters.owner }}/terraform-aks'
-        catalogInfoPath: 'catalog-info.yaml'
+        repoUrl: 'https://github.com/${{ parameters.owner }}/terraform-aks/blob/main/catalog-info.yaml'
+        #catalogInfoPath: 'catalog-info.yaml'
     - id: github-action
       name: Trigger GitHub Action
       action: github:actions:dispatch
