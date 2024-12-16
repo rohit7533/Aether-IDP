@@ -232,14 +232,12 @@ spec:
         description: '${{ parameters.description }}'
         #repoUrl: 'github.com/${{ parameters.owner }}/${{ parameters.name }}'
         repoUrl: 'github.com?owner=${{ parameters.owner }}&repo=${{ parameters.name }}'
-        access: 'private'
+        access: 'public'
         #repoUrl: '${{ parameters.owner }}/${{ parameters.name }}'
         defaultBranch: main
     - id: register
       name: Register Application in Backstage Catalog
       action: catalog:register
-      depends-on:
-        - publish-app-repo
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yaml'
@@ -257,8 +255,8 @@ spec:
     - id: register-infra
       name: Register Terraform in Backstage Catalog
       action: catalog:register
-      depends-on:
-        - fetch-infra
+      # depends-on:
+      #   - fetch-infra
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yaml'
