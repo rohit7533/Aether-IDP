@@ -274,9 +274,8 @@ spec:
               - terraform
           spec:
             type: service
-            owner: ${{ parameters.owner }}
-            lifecycle: production
-            system: your-system
+            lifecycle: experimental
+            owner: team-a
     # - id: deploy-k8s
     #   name: Deploy to Kubernetes
     #   action: kubernetes:kubectl
