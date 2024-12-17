@@ -254,6 +254,32 @@ spec:
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yaml'
+    - id: register-infra
+      name: Register infra in Backstage Catalog
+      action: catalog:register
+      input:
+        spec:
+          apiVersion: backstage.io/v1alpha1
+          kind: Component
+          metadata:
+            name: ${{ parameters.clusterName }}
+            annotations:
+              github.com/project-slug: rohit7533/terraform-aks
+              terraform/workspaces: ${{parameters.workspaceName}} #NodeJSAks
+              terraform/organization: ${{parameters.organizationName}} #kedar-org
+            description: Azure Kubernetes Service(AKS) cluster managed by Terraform
+            tags:
+              - azure
+              - aks
+              - terraform
+          spec:
+            type: service
+            owner: ${{ parameters.owner }}
+            lifecycle: production
+            system: your-system
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: './Terraform/catalog-info.yaml'
     # - id: deploy-k8s
     #   name: Deploy to Kubernetes
     #   action: kubernetes:kubectl
