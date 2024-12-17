@@ -248,13 +248,13 @@ spec:
           clusterName: ${{ parameters.clusterName }}
           region: ${{ parameters.region }}
           action: ${{ parameters.action }}
-    - id: register
-      name: Register in Backstage Catalog
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
-    - id: register
+    # - id: register
+    #   name: Register in Backstage Catalog
+    #   action: catalog:register
+    #   input:
+    #     repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+    #     catalogInfoPath: '/catalog-info.yaml'
+    - id: register-infra
       name: Register infra in Backstage Catalog
       action: catalog:register
       input:
