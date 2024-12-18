@@ -248,34 +248,12 @@ spec:
           clusterName: ${{ parameters.clusterName }}
           region: ${{ parameters.region }}
           action: ${{ parameters.action }}
-    # - id: register
-    #   name: Register in Backstage Catalog
-    #   action: catalog:register
-    #   input:
-    #     repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-    #     catalogInfoPath: '/catalog-info.yaml'
-    - id: register
-      name: Register infra in Backstage Catalog
+    - id: register-service
+      name: Register in Backstage Catalog
       action: catalog:register
       input:
-        spec:
-          apiVersion: backstage.io/v1alpha1
-          kind: Component
-          metadata:
-            name: ${{ parameters.clusterName }}
-            annotations:
-              github.com/project-slug: rohit7533/terraform-aks
-              terraform/workspaces: ${{parameters.workspaceName}} #NodeJSAks
-              terraform/organization: ${{parameters.organizationName}} #kedar-org
-            description: Azure Kubernetes Service(AKS) cluster managed by Terraform
-            tags:
-              - azure
-              - aks
-              - terraform
-          spec:
-            type: service
-            lifecycle: experimental
-            owner: team-a
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
     # - id: deploy-k8s
     #   name: Deploy to Kubernetes
     #   action: kubernetes:kubectl
