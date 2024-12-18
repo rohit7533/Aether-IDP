@@ -1,8 +1,8 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: springboot-aks-service
-  title: springboot Service with AKS Deployment
+  name: springboot-aks-template
+  title: springboot Template with AKS Deployment using tekton
   description: Creates a springboot service repository with Tekton pipeline for AKS deployment.
   tags:
     - springboot
@@ -40,6 +40,7 @@ spec:
           description: The name of your workspace. Terraform workspaces let you manage environment-specific configurations.
           enum:
             - NodeJSAks
+    # Parameters for setting up the AKS cluster
     - title: Basic Azure Kubernetes Service(AKS) Cluster Configuration
       required:
         - resourceGroupName
@@ -138,8 +139,8 @@ spec:
     #       name: ${{ parameters.name }}
     #       namespace: ${{ parameters.namespace }}
     #       dockerRepo: ${{ parameters.dockerRepo }}
-    - id: fetch
-      name: Fetch Skeleton
+    - id: fetch-app-skeleton
+      name: Fetch App Skeleton
       action: fetch:template
       input:
         url: ./skeleton
@@ -149,8 +150,6 @@ spec:
           namespace: ${{ parameters.namespace }}
           dockerRepo: ${{ parameters.dockerRepo }}
           description: ${{ parameters.description }}
-          workspaceName: ${{ parameters.workspaceName }}
-          org: ${{ parameters.organizationName }}
     # - id: copy-k8s-resources
     #   name: Copy k8s Resources into Skeleton
     #   action: fetch:template
@@ -223,40 +222,64 @@ spec:
     #     sources:
     #       - ./Common-Artifacts/k8s/
     #     targetPath: ./skeleton/Tekton/k8s/
-    - id: publish
+    - id: publish-app-repo
       name: Publish to GitHub
       action: publish:github
+      depends-on:
+        - fetch-app-skeleton
       input:
         allowedHosts: ['github.com']
         description: '${{ parameters.description }}'
         #repoUrl: 'github.com/${{ parameters.owner }}/${{ parameters.name }}'
         repoUrl: 'github.com?owner=${{ parameters.owner }}&repo=${{ parameters.name }}'
-        access: 'public'
-        accessibility: 'public'
         #repoUrl: '${{ parameters.owner }}/${{ parameters.name }}'
         defaultBranch: main
-    # - id: github-action
-    #   name: Trigger GitHub Action
-    #   action: github:actions:dispatch
-    #   input:
-    #     workflowId: manage-aks-cluster.yml  # GitHub Action workflow ID
-    #     repoUrl: 'github.com?repo=terraform-aks&owner=rohit7533'
-    #     branchOrTagName: 'main'  # The branch to run this action on
-    #     workflowInputs:
-    #       organizationName: ${{ parameters.organizationName }}
-    #       email: ${{ parameters.email }}
-    #       projectName: ${{ parameters.projectName }}
-    #       workspaceName: ${{ parameters.workspaceName }}
-    #       resourceGroupName: ${{ parameters.resourceGroupName }}  
-    #       clusterName: ${{ parameters.clusterName }}
-    #       region: ${{ parameters.region }}
-    #       action: ${{ parameters.action }}
-    - id: register-service
-      name: Register in Backstage Catalog
+    - id: register
+      name: Register Application in Backstage Catalog
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
+        #repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        repoUrl: 'https://github.com/${{ parameters.owner }}/${{ parameters.name }}/blob/main/catalog-info.yaml'
+       # catalogInfoPath: 'catalog-info.yaml'
+    - id: fetch-infra
+      name: Fetch Terraform
+      action: fetch:template
+      input:
+        url: ./Terraform
+        values:
+          org: ${{ parameters.organizationName }}
+          owner: ${{ parameters.owner }}
+          workspaceName: ${{ parameters.workspaceName }}
+          dockerRepo: ${{ parameters.dockerRepo }}
+          description: ${{ parameters.description }}
+    - id: register-infra
+      name: Register Terraform in Backstage Catalog
+      action: catalog:register
+      # depends-on:
+      #   - fetch-infra
+      input:
+        #repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        repoUrl: 'https://github.com/${{ parameters.owner }}/terraform-aks/blob/main/catalog-info.yaml'
+        #catalogInfoPath: 'catalog-info.yaml'
+    - id: github-action
+      name: Trigger GitHub Action
+      action: github:actions:dispatch
+      depends-on:
+        - register-infra
+      input:
+        workflowId: manage-aks-cluster.yml  # GitHub Action workflow ID
+        repoUrl: 'github.com?repo=terraform-aks&owner=rohit7533'
+        branchOrTagName: 'main'  # The branch to run this action on
+        workflowInputs:
+          organizationName: ${{ parameters.organizationName }}
+          email: ${{ parameters.email }}
+          projectName: ${{ parameters.projectName }}
+          workspaceName: ${{ parameters.workspaceName }}
+          resourceGroupName: ${{ parameters.resourceGroupName }}  
+          clusterName: ${{ parameters.clusterName }}
+          region: ${{ parameters.region }}
+          action: ${{ parameters.action }}
+    
     # - id: deploy-k8s
     #   name: Deploy to Kubernetes
     #   action: kubernetes:kubectl

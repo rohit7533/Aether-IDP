@@ -12,9 +12,9 @@ metadata:
     backstage.io/kubernetes-namespace: 'default'
     tektonci/enabled: 'true'
     tektonci/namespace: 'deafult'
-    github.com/project-slug: rohit7533/terraform-aks
-    terraform/workspaces: ${{values.workspaceName}} #NodeJSAks
-    terraform/organization: ${{values.org}} 
+    # github.com/project-slug: rohit7533/terraform-aks
+    # terraform/workspaces: ${{values.workspaceName}} #NodeJSAks
+    # terraform/organization: ${{values.org}} 
 spec:
   type: service
   owner: ${{values.owner | dump}}
