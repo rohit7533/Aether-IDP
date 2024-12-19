@@ -63,7 +63,7 @@ spec:
   steps:
     - id: fetch
       name: Fetch Skeleton
-      action: fetch:plain
+      action: fetch:template
       input:
         url: ./skeleton
         values:
