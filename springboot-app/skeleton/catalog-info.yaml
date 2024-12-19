@@ -6,9 +6,9 @@ metadata:
   annotations:
     backstage.io/managed-by-location: url:https://github.com/${{values.owner}}/${{values.name}}
     backstage.io/managed-by-origin-location: url:https://github.com/${{values.owner}}/${{values.name}}
-    tekton.dev/pipelines: ${{values.namespace}}/springboot-pipeline # Namespace/PipelineName
+    tekton.dev/pipelines: ${{values.namespace}}/${{values.name}}-pipeline # Namespace/PipelineName
     backstage.io/kubernetes-id: ${{ values.name | dump }}
-    backstage.io/kubernetes-cluster: 'docker-desktop'
+    backstage.io/kubernetes-cluster: 'bsidp-cluster'
     backstage.io/kubernetes-namespace: 'default'
     tektonci/enabled: 'true'
     tektonci/namespace: 'deafult'

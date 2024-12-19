@@ -1,12 +1,12 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: springboot-pipeline-run
-  labels:
-    tekton.dev/pipelines: ${{values.namespace}}/springboot-pipeline
+  name: ${{values.name}}-pipeline-run
+  annotations:
+    'backstage.io/tekton-pipeline': ${{values.name}}-pipeline-run
 spec:
   pipelineRef:
-    name: springboot-pipeline
+    name: ${{values.name}}-pipeline
   serviceAccountName: tekton-sa
   params:
     - name: repo_url
