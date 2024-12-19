@@ -4,7 +4,8 @@ metadata:
   name: ${{values.name}}
   namespace: ${{values.namespace}}
   labels:
-    tekton.dev/pipelines: ${{values.namespace}}/springboot-pipeline
+    #tekton.dev/pipelines: ${{values.namespace}}/springboot-pipeline
+    'backstage.io/kubernetes-id': '${{values.name}}'
 spec:
   replicas: 1
   selector:
@@ -14,6 +15,7 @@ spec:
     metadata:
       labels:
         app: ${{values.name}}
+        'backstage.io/kubernetes-id': '${{values.name}}'
     spec:
       containers:
         - name: ${{values.name}}

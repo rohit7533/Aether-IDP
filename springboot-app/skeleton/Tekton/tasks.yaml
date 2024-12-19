@@ -3,7 +3,7 @@ kind: Task
 metadata:
   name: git-clone
   namespace: ${{values.namespace}}
-   annotations:
+  annotations:
     backstage.io/ci-cd: enabled     # Enables Backstage integration
     tekton.dev/version: v1beta1    # Custom version annotation
     owner: team-devops             # Owner of the pipeline
@@ -30,7 +30,7 @@ kind: Task
 metadata:
   name: build-app
   namespace: ${{values.namespace}}
-   annotations:
+  annotations:
     backstage.io/ci-cd: enabled     # Enables Backstage integration
     tekton.dev/version: v1beta1    # Custom version annotation
     owner: team-devops             # Owner of the pipeline
@@ -56,7 +56,7 @@ metadata:
   name: docker-build-and-push
   namespace: ${{values.namespace}}
   namespace: ${{values.namespace}}
-   annotations:
+  annotations:
     backstage.io/ci-cd: enabled     # Enables Backstage integration
     tekton.dev/version: v1beta1    # Custom version annotation
     owner: team-devops             # Owner of the pipeline
@@ -99,7 +99,7 @@ metadata:
   name: deploy-to-aks
   namespace: ${{values.namespace}}
   namespace: ${{values.namespace}}
-   annotations:
+  annotations:
     backstage.io/ci-cd: enabled     # Enables Backstage integration
     tekton.dev/version: v1beta1    # Custom version annotation
     owner: team-devops             # Owner of the pipeline
