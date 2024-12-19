@@ -1,8 +1,8 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: springboot-template
-  title: springboot template with AKS Deployment
+  name: springboot-demo-template
+  title: springboot-demo-template
   description: Creates a springboot service repository with Tekton pipeline for AKS deployment.
   tags:
     - springboot
