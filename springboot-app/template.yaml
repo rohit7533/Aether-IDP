@@ -49,17 +49,17 @@ spec:
           validation:
             required: true
         namespace:
-            title: K8s Namespace
-            type: string
-            description: Provide the namespace to deploy
-            validation:
-              required: true
+          title: K8s Namespace
+          type: string
+          description: Provide the namespace to deploy
+          validation:
+            required: true
         dockerRepo:
-            title: Docker Repository
-            type: string
-            description: Provide the docker repo to push & pull image
-            validation:
-              required: true
+          title: Docker Repository
+          type: string
+          description: Provide the docker repo to push & pull image
+          validation:
+            required: true
   uiSchema:
     # pipelineType:
     #   'ui:widget': radio
