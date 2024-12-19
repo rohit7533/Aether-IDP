@@ -17,6 +17,8 @@ spec:
         app: ${{values.name}}
         'backstage.io/kubernetes-id': '${{values.name}}'
     spec:
+      imagePullSecrets:
+      - name: registry-auth
       containers:
         - name: ${{values.name}}
           image: ${{values.dockerRepo}}/${{values.name}}:latest
