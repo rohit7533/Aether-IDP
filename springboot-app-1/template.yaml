@@ -30,14 +30,14 @@ spec:
           title: Description
           type: string
           description: Brief description of the service.
-        pipelineType:
-          title: Pipeline Type
-          type: string
-          enum:
-            - Tekton
-          description: Select the pipeline system to use
-          validation:
-            required: true
+        # pipelineType:
+        #   title: Pipeline Type
+        #   type: string
+        #   enum:
+        #     - Tekton
+        #   description: Select the pipeline system to use
+        #   validation:
+        #     required: true
     - title: Deploy Configuration
       properties:
         deployType:
@@ -57,9 +57,22 @@ spec:
         dockerRepo:
           title: Docker Repository
           type: string
+          enum:
+            - idpdeveacr.azurecr.io
+            - backstagdeveacr.azurecr.io
           description: Provide the docker repo to push & pull image
           validation:
             required: true
+    - title: Pipeline Configuration
+      properties:
+        pipelineType:
+        title: Pipeline Type
+        type: string
+        enum:
+          - Tekton
+        description: Select the pipeline system to use
+        validation:
+          required: true
   steps:
     - id: fetch
       name: Fetch Skeleton
