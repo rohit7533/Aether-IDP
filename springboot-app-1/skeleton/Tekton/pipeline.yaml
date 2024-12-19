@@ -2,6 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: ${{values.name}}-pipeline
+  namespace: "${{values.namespace}}"
   annotations:
     'backstage.io/catalog-info': '${{values.name}}-pipeline'
 spec:

@@ -2,6 +2,7 @@ apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
   name: ${{values.name}}-pipeline-run
+  namespace: "${{values.namespace}}"
   annotations:
     'backstage.io/tekton-pipeline': ${{values.name}}-pipeline-run
 spec:

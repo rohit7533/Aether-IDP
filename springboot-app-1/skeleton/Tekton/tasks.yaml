@@ -8,9 +8,6 @@ metadata:
     tekton.dev/version: v1beta1    # Custom version annotation
     owner: team-devops             # Owner of the pipeline
     purpose: build-deploy
-    backstage.io/kubernetes-id: springboot-pipeline  # Backstage ID to link the pipeline
-    tektonci/enabled: 'true'                         # Enables Tekton CI/CD integration in Backstage
-    tektonci/namespace: ${{values.namespace}}
 spec:
   steps:
     - name: clone-repo
@@ -39,9 +36,6 @@ metadata:
     tekton.dev/version: v1beta1    # Custom version annotation
     owner: team-devops             # Owner of the pipeline
     purpose: build-deploy
-    backstage.io/kubernetes-id: springboot-pipeline  # Backstage ID to link the pipeline
-    tektonci/enabled: 'true'                         # Enables Tekton CI/CD integration in Backstage
-    tektonci/namespace: ${{values.namespace}}
 spec:
   steps:
     - name: build
@@ -64,9 +58,6 @@ metadata:
     tekton.dev/version: v1beta1    # Custom version annotation
     owner: team-devops             # Owner of the pipeline
     purpose: build-deploy
-    backstage.io/kubernetes-id: springboot-pipeline  # Backstage ID to link the pipeline
-    tektonci/enabled: 'true'                         # Enables Tekton CI/CD integration in Backstage
-    tektonci/namespace: ${{values.namespace}}
 spec:
   steps:
     - name: buildah-build
@@ -106,9 +97,6 @@ metadata:
     tekton.dev/version: v1beta1    # Custom version annotation
     owner: team-devops             # Owner of the pipeline
     purpose: build-deploy
-    backstage.io/kubernetes-id: springboot-pipeline  # Backstage ID to link the pipeline
-    tektonci/enabled: 'true'                         # Enables Tekton CI/CD integration in Backstage
-    tektonci/namespace: ${{values.namespace}}
 spec:
   steps:
     - name: kubectl-apply

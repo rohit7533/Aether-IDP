@@ -9,9 +9,9 @@ metadata:
     tekton.dev/pipelines: ${{values.namespace}}/${{values.name}}-pipeline # Namespace/PipelineName
     backstage.io/kubernetes-id: ${{ values.name | dump }}
     backstage.io/kubernetes-cluster: 'bsidp-cluster'
-    backstage.io/kubernetes-namespace: 'default'
+    backstage.io/kubernetes-namespace: '${{values.namespace}}'
     tektonci/enabled: 'true'
-    tektonci/namespace: 'deafult'
+    tektonci/namespace: '${{values.namespace}}'
     # github.com/project-slug: rohit7533/terraform-aks
     # terraform/workspaces: ${{values.workspaceName}} #NodeJSAks
     # terraform/organization: ${{values.org}} 
