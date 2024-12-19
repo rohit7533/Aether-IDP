@@ -70,15 +70,6 @@ spec:
     deployType:
       'ui:condition': "formData.pipelineType !== ''"
   steps:
-    #  - id: fetch-k8s-file
-    #   name: Fetch K8s deployment file
-    #   action: templater:handlebars
-    #   input:
-    #     directory: ./Common-Artifacts/k8s/springboot-deploy.yaml
-    #     values:
-    #       name: ${{ parameters.name }}
-    #       namespace: ${{ parameters.namespace }}
-    #       dockerRepo: ${{ parameters.dockerRepo }}
     - id: fetch
       name: Fetch Skeleton
       action: fetch:template
@@ -92,78 +83,6 @@ spec:
           description: ${{ parameters.description }}
           workspaceName: ${{ parameters.workspaceName }}
           org: ${{ parameters.organizationName }}
-    # - id: copy-k8s-resources
-    #   name: Copy k8s Resources into Skeleton
-    #   action: fetch:template
-    #   input:
-    #     url: ./Common-Artifacts/k8s/   # Path relative to the template root
-    #     targetPath: ./skeleton/Tekton/k8s
-    #     values:
-    #       name: ${{ parameters.name }}
-    #       namespace: ${{ parameters.namespace }}
-    #       dockerRepo: ${{ parameters.dockerRepo }}
-    #       owner: ${{ parameters.owner }}
-    # - id: copy-pipeline-resources
-    #   name: Copy pipeline Resources into Skeleton
-    #   action: fetch:template
-    #   input:
-    #     url: ./Common-Artifacts/Pipeline/Tekton/   # Path relative to the template root
-    #     targetPath: ./skeleton/Tekton/
-    #     values:
-    #       name: ${{ parameters.name }}
-    #       namespace: ${{ parameters.namespace }}
-    #       dockerRepo: ${{ parameters.dockerRepo }}
-    #       owner: ${{ parameters.owner }}
-    # # - id: template-copied-files
-    #   name: Template Copied Files with Values
-    #   action: templater:handlebars
-    #   input:
-    #     directory: ./skeleton/Tekton/                  # Path to the skeleton folder after copying
-    #     values:
-    #       name: ${{ parameters.name }}
-    #       namespace: ${{ parameters.namespace }}
-    #       dockerRepo: ${{ parameters.dockerRepo }}
-    #       owner: ${{ parameters.owner }}
-          #pipelineType: ${{ parameters.pipelineType }}
-          #buildType: ${{ parameters.buildType }}
-          #testType: ${{ parameters.testType }}
-          #deployType: ${{ parameters.deployType }}
-      # Add any additional derived or static values here
-    # - id: fetch-pipeline-config
-    #   name: Template Additional Files
-    #   action: templater:handlebars
-    #   input:
-    #     directory: ./Common-Artifacts/Pipeline/Tekton/pipeline-run.yaml
-    #     values:
-    #       # Pass any required parameters
-    # - id: template-additional-files
-    #   name: Template Additional Files
-    #   action: templater:handlebars
-    #   input:
-    #     directory: ./Common-Artifacts/Pipeline/Tekton/pipeline.yaml
-    #     values:
-    #       # Pass any required parameters
-    # - id: template-additional-files
-    #   name: Template Additional Files
-    #   action: templater:handlebars
-    #   input:
-    #     directory: ./Common-Artifacts/Pipeline/Tekton/tasks.yaml
-    #     values:
-    #       # Pass any required parameters
-    # - id: merge-files
-    #   name: Merge Files into Skeleton
-    #   action: scaffolder:mergeFiles
-    #   input:
-    #     sources:
-    #       - ./Common-Artifacts/Pipeline/Tekton
-    #     targetPath: ./skeleton/Tekton/
-    # - id: merge-files
-    #   name: Merge Files into Skeleton
-    #   action: scaffolder:mergeFiles
-    #   input:
-    #     sources:
-    #       - ./Common-Artifacts/k8s/
-    #     targetPath: ./skeleton/Tekton/k8s/
     - id: publish
       name: Publish to GitHub
       action: publish:github
@@ -176,47 +95,12 @@ spec:
         accessibility: 'public'
         #repoUrl: '${{ parameters.owner }}/${{ parameters.name }}'
         defaultBranch: main
-    # - id: github-action
-    #   name: Trigger GitHub Action
-    #   action: github:actions:dispatch
-    #   input:
-    #     workflowId: manage-aks-cluster.yml  # GitHub Action workflow ID
-    #     repoUrl: 'github.com?repo=terraform-aks&owner=rohit7533'
-    #     branchOrTagName: 'main'  # The branch to run this action on
-    #     workflowInputs:
-    #       organizationName: ${{ parameters.organizationName }}
-    #       email: ${{ parameters.email }}
-    #       projectName: ${{ parameters.projectName }}
-    #       workspaceName: ${{ parameters.workspaceName }}
-    #       resourceGroupName: ${{ parameters.resourceGroupName }}  
-    #       clusterName: ${{ parameters.clusterName }}
-    #       region: ${{ parameters.region }}
-    #       action: ${{ parameters.action }}
-    # - id: apply-k8s-manifest
-    #   name: Apply Kubernetes Manifests
-    #   action: shell:run
-    #   input:
-    #     command: kubectl apply -f /Tekton/manifests/deployment.yaml
     - id: register-service
       name: Register in Backstage Catalog
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yaml'
-    # - id: deploy-k8s
-    #   name: Deploy to Kubernetes
-    #   action: kubernetes:kubectl
-    #   input:
-    #     manifests:
-    #       $eval: |
-    #         const fs = require('fs');
-    #         const path = require('path');
-    #         const yamlDir = path.resolve(ctx.workspacePath, ctx.parameters.yamlFilesPath);
-    #         const yamlFiles = fs.readdirSync(yamlDir).map(file => fs.readFileSync(path.join(yamlDir, file), 'utf8'));
-    #         yamlFiles;
-    #     kubeconfig: ${{ parameters.kubeconfig }}
-    #     namespace: ${{ parameters.namespace }}
-  # Outputs are displayed to the user after a successful execution of the template.
   output:
     links:
       - title: Repository
