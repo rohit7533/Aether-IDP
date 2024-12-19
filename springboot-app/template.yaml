@@ -60,15 +60,6 @@ spec:
           description: Provide the docker repo to push & pull image
           validation:
             required: true
-  uiSchema:
-    # pipelineType:
-    #   'ui:widget': radio
-    # buildType:
-    #   'ui:condition': "formData.pipelineType !== ''"
-    # testType:
-    #   'ui:condition': "formData.pipelineType !== ''"
-    deployType:
-      'ui:condition': "formData.pipelineType !== ''"
   steps:
     - id: fetch
       name: Fetch Skeleton
@@ -81,19 +72,14 @@ spec:
           namespace: ${{ parameters.namespace }}
           dockerRepo: ${{ parameters.dockerRepo }}
           description: ${{ parameters.description }}
-          workspaceName: ${{ parameters.workspaceName }}
-          org: ${{ parameters.organizationName }}
     - id: publish
       name: Publish to GitHub
       action: publish:github
       input:
         allowedHosts: ['github.com']
         description: '${{ parameters.description }}'
-        #repoUrl: 'github.com/${{ parameters.owner }}/${{ parameters.name }}'
         repoUrl: 'github.com?owner=${{ parameters.owner }}&repo=${{ parameters.name }}'
         access: 'public'
-        accessibility: 'public'
-        #repoUrl: '${{ parameters.owner }}/${{ parameters.name }}'
         defaultBranch: main
     - id: register-service
       name: Register in Backstage Catalog
