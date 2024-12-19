@@ -1,0 +1,29 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: ${{values.name}}-pipeline-run
+  annotations:
+    'backstage.io/tekton-pipeline': ${{values.name}}-pipeline-run
+spec:
+  pipelineRef:
+    name: ${{values.name}}-pipeline
+  serviceAccountName: default
+  params:
+    - name: repo_url
+      value: "https://github.com/${{values.owner}}/${{values.name}}.git"
+    - name: image
+      value: "${{values.dockerRepo}}/${{values.name}}:latest"
+    - name: deployment_manifest
+      value: "/workspace/source/k8s/springboot-deploy.yaml"
+    # - name: helm_chart
+    #   value: "charts/springboot"
+    - name: namespace
+      value: "${{values.namespace}}"
+  workspaces:
+    - name: shared-workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
